@@ -5,9 +5,6 @@ from util import Stack, Queue  # These may come in handy
 
 
 class Graph:
-
-    """Represent a graph as a dictionary of vertices mapping labels to edges."""
-
     def __init__(self):
         self.vertices = {}
 
@@ -72,22 +69,35 @@ class Graph:
                     q.enqueue(neighbor_path)
 
     def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        pass  # TODO
+        s = Stack()
+        s.push([starting_vertex])
+        visited = set()
+        while s.size() > 0:
+            path = s.pop()
+            first = path[-1]
+            if first not in visited:
+                if first == destination_vertex:
+                    return path
+                visited.add(first)
+                for neighbor in self.get_neighbors(first):
+                    neighbor_path = list(path)
+                    neighbor_path.append(neighbor)
+                    s.push(neighbor_path)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-
-        This should be done using recursion.
-        """
-        pass  # TODO
+    def dfs_recursive(
+        self, starting_vertex, destination_vertex, visited=set(), path=[]
+    ):
+        visited.add(starting_vertex)
+        new_path = path + [starting_vertex]
+        if starting_vertex == destination_vertex:
+            return new_path
+        for neighbor in self.vertices[starting_vertex]:
+            if neighbor not in visited:
+                neighbor_path = self.dfs_recursive(
+                    neighbor, destination_vertex, visited, new_path
+                )
+                if neighbor_path:
+                    return neighbor_path
 
 
 sample = Graph()  # Instantiate your graph
