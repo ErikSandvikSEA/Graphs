@@ -37,11 +37,16 @@ class Graph:
                     q.enqueue(neighbor)
 
     def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        s = Stack()
+        s.push(starting_vertex)
+        visited = set()
+        while s.size() > 0:
+            vertex = s.pop()
+            if vertex not in visited:
+                print(vertex)
+                visited.add(vertex)
+                for neighbor in self.get_neighbors(vertex):
+                    s.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
         """
@@ -78,6 +83,19 @@ class Graph:
         """
         pass  # TODO
 
+
+sample = Graph()  # Instantiate your graph
+sample.add_vertex("0")
+sample.add_vertex("1")
+sample.add_vertex("2")
+sample.add_vertex("3")
+sample.add_edge("0", "1")
+sample.add_edge("1", "0")
+sample.add_edge("0", "3")
+sample.add_edge("3", "0")
+# sample.add_edge("0", "4")  # No '4' vertex, should raise an Exception!
+print("Sampler: ", sample.vertices)
+print("--------------------------------")
 
 if __name__ == "__main__":
     graph = Graph()  # Instantiate your graph
