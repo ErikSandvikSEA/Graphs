@@ -49,12 +49,6 @@ class Graph:
                     s.push(neighbor)
 
     def dft_recursive(self, starting_vertex, visited=set()):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-
-        This should be done using recursion.
-        """
         visited.add(starting_vertex)
         print(starting_vertex)
         for neighbor in self.vertices[starting_vertex]:
@@ -62,12 +56,20 @@ class Graph:
                 self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        pass  # TODO
+        q = Queue()
+        q.enqueue([starting_vertex])
+        visited = set()
+        while q.size() > 0:
+            path = q.dequeue()
+            last = path[-1]
+            if last not in visited:
+                if last == destination_vertex:
+                    return path
+                visited.add(last)
+                for neighbor in self.get_neighbors(last):
+                    neighbor_path = list(path)
+                    neighbor_path.append(neighbor)
+                    q.enqueue(neighbor_path)
 
     def dfs(self, starting_vertex, destination_vertex):
         """
