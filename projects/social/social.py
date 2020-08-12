@@ -75,6 +75,8 @@ class SocialGraph:
             friendships = possible_friendships[i]
             self.add_friendship(friendships[0], friendships[1])
 
+    path_visited = {}
+
     def get_all_social_paths(self, user_id):
         """
         Takes a user's user_id as an argument
@@ -101,12 +103,26 @@ class SocialGraph:
 
         return visited
 
+    # def find_avg_path_length(self):
+    #     total_length = 0
+    #     for key, val in self.populate_graph(1000, 5).items():
+    #         total_length += len(val)
+
+    #     print(total_length // len(visited))
+
 
 if __name__ == "__main__":
     sg = SocialGraph()
-    sg.populate_graph(100, 10)
+    sg.populate_graph(1000, 5)
     print("Users: ", sg.users)
     print("Friendships: ", sg.friendships)
     connections = sg.get_all_social_paths(1)
     print("Connections: ", connections)
     print("Counter: ", sg.counter)
+    total_length = 0
+    avg_len = None
+    for key, val in sg.friendships.items():
+        total_length += len(val)
+    avg_len = total_length // len(sg.friendships)
+    print("Total length: ", total_length)
+    print("Average length: ", avg_len)
