@@ -14,7 +14,10 @@ class SocialGraph:
     def __init__(self):
         self.reset()
 
+    counter = 0
+
     def add_friendship(self, user_id, friend_id):
+        self.counter += 1
         """
         Creates a bi-directional friendship
         """
@@ -101,8 +104,9 @@ class SocialGraph:
 
 if __name__ == "__main__":
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(100, 10)
     print("Users: ", sg.users)
     print("Friendships: ", sg.friendships)
     connections = sg.get_all_social_paths(1)
     print("Connections: ", connections)
+    print("Counter: ", sg.counter)
