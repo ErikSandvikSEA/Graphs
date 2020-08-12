@@ -1,4 +1,5 @@
 import random
+from social_util import Social_Stack, Social_Queue
 
 
 class User:
@@ -81,14 +82,27 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        q = [[user_id]]  # build a queue
+
+        while len(q) > 0:
+            path = q.pop()
+            first_friend = path[-1]
+            # grab the friend at the end of the queue path and add it to visited if it's not already
+            if first_friend not in visited:
+                visited[first_friend] = path
+                # add all of the friends of first_friend into the path, then add the path to the queue
+                for friends_friend in self.friendships[first_friend]:
+                    new_path = list(path)
+                    new_path.append(friends_friend)
+                    q.append(new_path)
+
         return visited
 
 
 if __name__ == "__main__":
     sg = SocialGraph()
     sg.populate_graph(10, 2)
-    print(sg.users)
-    print(sg.friendships)
-    # connections = sg.get_all_social_paths(1)
-    # print(connections)
+    print("Users: ", sg.users)
+    print("Friendships: ", sg.friendships)
+    connections = sg.get_all_social_paths(1)
+    print("Connections: ", connections)
