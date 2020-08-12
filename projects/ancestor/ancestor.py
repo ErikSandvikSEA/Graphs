@@ -1,4 +1,5 @@
-from ancestor_util import Stack, Queue
+from ancestor_util import Ancestor_Stack, Ancestor_Queue
+from queue import Queue
 
 
 def get_parents(ancestors, node):
@@ -10,10 +11,10 @@ def get_parents(ancestors, node):
     return parents
 
 
-def earliest_ancestor(ancestors, starting_node):
+def earliest_ancestor_1(ancestors, starting_node):
     if get_parents(ancestors, starting_node) == []:
         return -1
-    q = Queue()
+    q = Ancestor_Queue()
     q.enqueue(starting_node)
     ancestor_list = []
     visited = set()
@@ -38,6 +39,66 @@ def earliest_ancestor(ancestors, starting_node):
         return ancestor_list[-1][0]
 
 
+def earliest_ancestor_2(ancestors, starting_node):
+    families = {}  # child is the key, parents are the values
+    # build hashtable
+    for fam in ancestors:
+        if fam[1] in families:
+            families[fam[1]].add(fam[0])
+        else:
+            families[fam[1]] = {fam[0]}
+
+        # set the vals to a set that we can add to - if there aren't any parents, the value is an empty set
+        if fam[0] not in families:
+            families[fam[0]] = set()
+    if len(families[starting_node]) == 0:
+        return -1
+    next_generation = {starting_node}
+    while len(next_generation) > 0:
+        current = next_generation
+        next_generation = set()
+        for node in current:
+            next_generation = next_generation | families[node]
+        # print(next_generation)
+    return min(current)
+
+
+def earliest_ancestor_3(ancestors, starting_node):
+    graph = {}
+    for node in ancestors:
+        if node[1] not in graph:
+            graph[node[1]] = [node[0]]
+        else:
+            graph[node[1]].append(node[0])
+
+    if starting_node not in graph:
+        return -1
+
+    q = Queue()
+    q.put([starting_node])
+
+    found_ancestors = []
+
+    while not q.empty():
+        path = q.get()
+        v = path[-1]
+
+        if v not in graph:
+            found_ancestors.append(path)
+        else:
+            for parent in graph[v]:
+                q.put(path + [parent])
+
+    if len(found_ancestors) == 1:
+        return found_ancestors[0][-1]
+
+    else:
+        max_length = max([len(path) for path in found_ancestors])
+        return min([path[-1] for path in found_ancestors if len(path) == max_length])
+
+
+earliest_ancestor = earliest_ancestor_1
+
 sample = [
     (1, 3),
     (2, 3),
@@ -51,5 +112,5 @@ sample = [
     (10, 1),
 ]
 
-print(earliest_ancestor(sample, 1))
+earliest_ancestor(sample, 1)
 # print(get_parents(sample, 8))

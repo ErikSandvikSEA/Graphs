@@ -84,20 +84,28 @@ class Graph:
                     neighbor_path.append(neighbor)
                     s.push(neighbor_path)
 
-    def dfs_recursive(
-        self, starting_vertex, destination_vertex, visited=set(), path=[]
-    ):
-        visited.add(starting_vertex)
-        new_path = path + [starting_vertex]
-        if starting_vertex == destination_vertex:
-            return new_path
-        for neighbor in self.vertices[starting_vertex]:
+    def dfs_recursive(self, starting_vert, ending_vert, visited=None, path=None):
+        if visited is None:
+            visited = set()
+        if path is None:
+            path = []
+
+        visited.add(starting_vert)
+        # path = path + [starting_vert] #subtly makes a copy of the path
+        # more explicit way ↓
+        path = list(path)  # make a copy
+        path.append(starting_vert)
+
+        if starting_vert == ending_vert:
+            return path
+
+        for neighbor in self.get_neighbors(starting_vert):
             if neighbor not in visited:
-                neighbor_path = self.dfs_recursive(
-                    neighbor, destination_vertex, visited, new_path
-                )
-                if neighbor_path:
-                    return neighbor_path
+                new_path = self.dfs_recursive(neighbor, ending_vert, visited, path)
+                if new_path is not None:
+                    return new_path
+
+        return None  # if no path is found
 
 
 sample = Graph()  # Instantiate your graph
