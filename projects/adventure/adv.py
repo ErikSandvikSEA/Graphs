@@ -30,9 +30,9 @@ world = World()
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph = literal_eval(open(map_file, "r").read())
@@ -60,9 +60,8 @@ def dfs_recursive(player, prev_room=None, direction=None, visited=None, path=Non
     if prev_room != None:
         path.append(direction)
         player.travel(direction)
-        current_room = player.current_room.id
     current_room = player.current_room.id
-    print(f"Current room: {current_room}")
+    # print(f"Current room: {current_room}")
     # Initialize values for the directions of the current room
     if current_room not in visited:
         visited[current_room] = {}
@@ -70,13 +69,13 @@ def dfs_recursive(player, prev_room=None, direction=None, visited=None, path=Non
         for room in adjacent_rooms:
             visited[current_room][room] = "?"
 
-    # Add the prev_room at the return direction and the current room at the cooresponding direction of the prev_room
+    # register both current_room and prev room in visited
     if prev_room != None:
         visited[prev_room][direction] = current_room
         visited[current_room][compass[direction]] = prev_room
 
-    # depth first traversal method, should continue traveling until dead end is hit
-    # recursion allows for not having to waste moves returning to fork in the road
+    # dft
+    print("current: ", visited[current_room])
     for direction in visited[current_room]:
         if visited[current_room][direction] == "?":
             dfs_recursive(player, current_room, direction, visited, path)
